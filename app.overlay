@@ -1,8 +1,16 @@
 &i2c0 {
-	status = "okay";
-	mpu6050: mpu6050@68 {
-		compatible = "invensense,mpu6050";
-		reg = <0x68>;
-		status = "okay";
-	};
+    status = "okay";
+
+    /* Ensure your existing MPU6050 address configuration stays active */
+    mpu6050@68 {
+        compatible = "invensense,mpu6050";
+        reg = <0x68>;
+    };
+
+    /* FIX: This maps the hardware identifier so DEVICE_DT_GET_ONE resolves safely */
+    dps310@77 {
+        compatible = "infineon,dps310";
+        reg = <0x77>; /* 0x77 is standard default. Change to 0x76 if SDO pin is tied low */
+        status = "okay";
+    };
 };
