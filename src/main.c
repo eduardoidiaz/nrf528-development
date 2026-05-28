@@ -135,10 +135,16 @@ int main(void)
 				sensor_channel_get(mpu6050, SENSOR_CHAN_ACCEL_X, &accel_x);
 				sensor_channel_get(mpu6050, SENSOR_CHAN_ACCEL_Y, &accel_y);
 				sensor_channel_get(mpu6050, SENSOR_CHAN_ACCEL_Z, &accel_z);
+                                printk("accel_x = %f\n", sensor_value_to_double(&accel_x) * 10.0);
 			}
 			if (sensor_sample_fetch(dps310) == 0) {
 				sensor_channel_get(dps310, SENSOR_CHAN_PRESS, &pressure);
-				sensor_channel_get(dps310, SENSOR_CHAN_AMBIENT_TEMP, &temperature);
+				int temp_read = sensor_channel_get(dps310, SENSOR_CHAN_AMBIENT_TEMP, &temperature);
+                                if (temp_read < 0) {
+                                        printk("DPS310 Temp Read Failure!\n");
+                                }
+                                printk("pressure = %f\n", (sensor_value_to_double(&pressure) - 101.3) * 100.0);
+                                printk("temperature = %f\n", sensor_value_to_double(&temperature) * 10.0);
 			}
 
 			// Pack bits securely to stay below 20-byte BLE MTU bounds
